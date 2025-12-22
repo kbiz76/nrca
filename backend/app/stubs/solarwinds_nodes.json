@@ -1,0 +1,7 @@
+[
+  {"asset_id":"N-1001","hostname":"core-sw-01","ip":"10.10.1.10","site":"MTF-ALPHA","discovered":true,"cmdb_present":true,"patch_compliant":true,"last_seen":"2025-12-21T06:00:00Z"},
+  {"asset_id":"N-1002","hostname":"dist-sw-03","ip":"10.10.2.20","site":"MTF-ALPHA","discovered":true,"cmdb_present":false,"patch_compliant":false,"last_seen":"2025-12-20T12:00:00Z"},
+  {"asset_id":"N-2001","hostname":"fw-01","ip":"10.20.1.1","site":"MTF-DELTA","discovered":false,"cmdb_present":true,"patch_compliant":false,"last_seen":"2025-12-01T00:00:00Z"},
+  {"asset_id":"N-3001","hostname":"ap-22","ip":"10.30.5.22","site":"MTF-BRAVO","discovered":true,"cmdb_present":true,"patch_compliant":true,"last_seen":"2025-12-21T05:59:00Z"}
+]
+

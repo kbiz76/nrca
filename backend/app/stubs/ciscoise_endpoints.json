@@ -1,0 +1,5 @@
+[
+  {"endpoint_id":"E-5001","site":"MTF-ALPHA","mac":"AA:BB:CC:DD:EE:01","profile":"Unknown","compliance":"noncompliant","last_seen":"2025-12-21T05:55:00Z"},
+  {"endpoint_id":"E-5002","site":"MTF-DELTA","mac":"AA:BB:CC:DD:EE:02","profile":"Windows10","compliance":"compliant","last_seen":"2025-12-21T05:50:00Z"}
+]
+
