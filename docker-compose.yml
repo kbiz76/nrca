@@ -1,0 +1,48 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nrca-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - NRCA_MODE=${NRCA_MODE:-stub}
+      - SN_INSTANCE=${SN_INSTANCE:-}
+      - SN_USER=${SN_USER:-}
+      - SN_PASS=${SN_PASS:-}
+      - SPLUNK_BASE_URL=${SPLUNK_BASE_URL:-}
+      - SPLUNK_TOKEN=${SPLUNK_TOKEN:-}
+      - SW_BASE_URL=${SW_BASE_URL:-}
+      - SW_USER=${SW_USER:-}
+      - SW_PASS=${SW_PASS:-}
+      - ISE_BASE_URL=${ISE_BASE_URL:-}
+      - ISE_USER=${ISE_USER:-}
+      - ISE_PASS=${ISE_PASS:-}
+    volumes:
+      - ./backend/app/stubs:/app/app/stubs:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:8000
+    container_name: nrca-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://backend:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
