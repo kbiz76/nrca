@@ -9,10 +9,14 @@ const getApiBase = () => {
   return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 };
 
-const API_BASE = getApiBase();
+const normalizePath = (path: string) => (path.startsWith("/") ? path : `/${path}`);
 
-export async function fetchJSON(path: string) {
-  const r = await fetch(`${API_BASE}${path}`, { cache: "no-store" });
+export async function fetchJSON(path: string, init?: RequestInit) {
+  const base = getApiBase();
+  const r = await fetch(`${base}${normalizePath(path)}`, {
+    cache: "no-store",
+    ...init,
+  });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return r.json();
 }
@@ -21,7 +25,7 @@ export function downloadUrl(path: string) {
   // Client-side URLs should use localhost (browser context)
   const base = typeof window !== 'undefined' 
     ? (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000")
-    : API_BASE;
-  return `${base}${path}`;
+    : getApiBase();
+  return `${base}${normalizePath(path)}`;
 }
 

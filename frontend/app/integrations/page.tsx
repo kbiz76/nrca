@@ -6,40 +6,61 @@ export default async function Integrations({ searchParams }: { searchParams: { m
 
   return (
     <div>
-      <h1 style={{ marginTop: 0 }}>Integrations</h1>
-      <p style={{ marginTop: 4 }}>
-        Demo shows connector framework with <b>STUB</b>/<b>LIVE</b> modes. Stub uses realistic sample payloads; live requires credentials.
-      </p>
-
-      <div style={{ marginBottom: 12 }}>
-        <a href="/integrations?mode=stub">Stub Mode</a> <span>|</span>{" "}
-        <a href="/integrations?mode=live">Live Mode</a>
+      <div className="section-header">
+        <div>
+          <h1 className="page-title">Integrations</h1>
+          <p className="subtitle">
+            Connector framework supports <b>STUB</b>/<b>LIVE</b> modes. Stub uses realistic sample payloads; live requires credentials.
+          </p>
+        </div>
+        <span className="pill">{mode.toUpperCase()} MODE</span>
       </div>
 
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr>
-            <th style={th}>Integration</th>
-            <th style={th}>Mode</th>
-            <th style={th}>Connected</th>
-            <th style={th}>Detail</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r: any) => (
-            <tr key={r.name}>
-              <td style={td}>{r.name}</td>
-              <td style={td}>{r.mode}</td>
-              <td style={td}>{r.connected ? "✅" : "❌"}</td>
-              <td style={td}>{r.detail || ""}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div style={{ marginBottom: 16, display: "flex", gap: 10, alignItems: "center" }}>
+        <a className="btn btn-outline" href="/integrations?mode=stub">Stub Mode</a>
+        <a className="btn btn-outline" href="/integrations?mode=live">Live Mode</a>
+      </div>
+
+      <div className="card-grid">
+        {rows.map((r: any) => {
+          const meta = META[r.name] || { color: "#64748b", initials: r.name.slice(0, 2).toUpperCase() };
+          return (
+            <div key={r.name} className="integration-card">
+              <div className="integration-head">
+                <div className="integration-meta">
+                  <div className="logo" style={{ background: meta.color }}>{meta.initials}</div>
+                  <div>
+                    <div style={{ fontWeight: 600 }}>{r.name}</div>
+                    <div style={{ fontSize: 12, color: "var(--muted)" }}>Mode: {r.mode}</div>
+                  </div>
+                </div>
+                <span className={r.connected ? "status-good" : "status-bad"}>
+                  {r.connected ? "Connected" : "Disconnected"}
+                </span>
+              </div>
+              <div style={{ fontSize: 13, color: "var(--muted)" }}>{r.detail || "No detail provided"}</div>
+              <div style={{ fontSize: 12, color: "var(--muted)" }}>
+                Last pull: {formatDate(r.last_pull_utc)}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-const th: React.CSSProperties = { textAlign: "left", borderBottom: "1px solid #ddd", padding: 8 };
-const td: React.CSSProperties = { borderBottom: "1px solid #f0f0f0", padding: 8 };
+const META: Record<string, { color: string; initials: string }> = {
+  ServiceNow: { color: "#1d4ed8", initials: "SN" },
+  Splunk: { color: "#0f172a", initials: "SP" },
+  SolarWinds: { color: "#f97316", initials: "SW" },
+  "Cisco ISE": { color: "#0891b2", initials: "CI" },
+};
+
+function formatDate(value?: string | null) {
+  if (!value) return "Not pulled yet";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString();
+}
 
